@@ -1,0 +1,15 @@
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\bin\Debug\net8.0\LCReserve.exe
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\bin\Debug\net8.0\LCReserve.deps.json
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\bin\Debug\net8.0\LCReserve.runtimeconfig.json
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\bin\Debug\net8.0\LCReserve.dll
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\bin\Debug\net8.0\LCReserve.pdb
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.AssemblyInfoInputs.cache
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.AssemblyInfo.cs
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.csproj.CoreCompileInputs.cache
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.sourcelink.json
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.dll
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\refint\LCReserve.dll
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.pdb
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\LCReserve.genruntimeconfig.cache
+C:\Users\A141409\Revature Engineer Bootcamp\DawnBrinsonProject\LCReserve\obj\Debug\net8.0\ref\LCReserve.dll
