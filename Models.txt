@@ -1,0 +1,33 @@
+Models for my project 
+
+
+Lodges/Properties 
+Reservation System
+User 
+
+
+LC Reservations: 
+	- User
+		○ Id 
+		○ Username
+		○ password
+	- Lodges/Properties 
+		○ Id
+		○ Name of lodge
+	- Reservation System (idk if this is necessary or should be combined with the Lodge) 
+		○ Check Availability
+		○ Reserve Dates
+
+
+User - One user can reserve more than on lodge so 1-to-many
+Lodges - Each lodge can be reserved by one user at a time 1-to-1
+Reservation System - Not sure what relationship type this would fall into?
+
+
+
+
+
+Type of Relationships (Multiplicities)
+	- 1-to-1 Relationship   // Example one user has one account
+	- 1-to-Many Relationship  // Example one actor could be many movies
+	- Many-to Many Relationship // A user could have multiple accounts and one account could have multiple accounts. For example, in a banking system you could have multiple accounts and have multiple people on each account. 
