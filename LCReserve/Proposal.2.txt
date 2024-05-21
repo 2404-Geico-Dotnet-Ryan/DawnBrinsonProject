@@ -1,0 +1,22 @@
+Create a reservation system for a community called Little Creek Preserve. 
+
+Users will be able to: 
+    - Login/Register
+    - Make a reservation
+    - Cancel a reservation
+    - View reservation 
+
+    
+
+The user interface will have: 
+
+ - Greeting to website 
+ - Login/Regisration menu
+ - Main menu of optoins available to user 
+    - Make reservation
+    - Cancel reservation
+    - View reservation
+    - confirm reservation
+    - exit 
+
+    

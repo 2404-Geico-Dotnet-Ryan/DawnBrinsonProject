@@ -4,7 +4,7 @@ class UserStorage
     public Dictionary<int, User> users;
     public int idCounter = 1;
 
-    //Making this constructor give us some pre-loaded Movies to work with.
+    //Making this constructor give us some pre-loaded users to work with.
     public UserStorage()
     {
         User user1 = new(idCounter, "CodeIsMyJam", "pass1", "user"); idCounter++;
@@ -17,4 +17,5 @@ class UserStorage
         users.Add(user3.Id, user3);
     }
 
+    public int Id { get; internal set; }
 }

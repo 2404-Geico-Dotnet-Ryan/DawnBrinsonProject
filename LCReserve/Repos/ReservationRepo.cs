@@ -61,7 +61,7 @@ Data access & management centered around our Reservation Object
 
     }
 
-public Reservation? DeleteReservation(Reservation r)
+public Reservation? CancelReservation(Reservation r)
 {
     bool didRemove = reservationStorage.reservations.Remove(r.Id);
 
@@ -71,9 +71,10 @@ public Reservation? DeleteReservation(Reservation r)
     }
     else
     {
-        Console.WriteLine("The reservation could not be deleted. Please try again.");
+        Console.WriteLine("The reservation could not be cancelled. Please try again.");
         return null;
     }
+
 
 
 }

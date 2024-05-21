@@ -1,3 +1,4 @@
+
 class UserService
 {
     UserRepo ur = new();
@@ -53,7 +54,7 @@ public User? LoginUser(string username, string password)
 
     //What I will actually be doing is:
     //get all users
-    //check if the username exists
+    //check if the usernam and password match any user in my UserStorage
     //if so they login -> return the user
 
     List<User> allUsers = ur.GetAllUsers();
@@ -74,7 +75,18 @@ public User? LoginUser(string username, string password)
 
 }
 
+    internal User? GetUser(string username)
+    {
+        List<User> allUsers = ur.GetAllUsers();
 
+        foreach (User user in allUsers)
+        {
+            if (user.Username == username)
+            {
+                return user;
+            }
+        }
 
-
+        return null;
+    }
 }

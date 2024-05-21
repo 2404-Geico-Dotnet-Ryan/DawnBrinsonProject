@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.VisualBasic;
 
 class ReservationStorage
 {
@@ -18,7 +19,7 @@ public int idCounter = 1;
 //making this constructor gives some pre-loaded reservations to work with.
 public ReservationStorage()
 {
-    Reservation r1 = new(idCounter, "The Big Lodge", 2, 3, 1, DateTime.Now, DateTime.Now); idCounter++;
+   Reservation r1 = new(idCounter, "The Big Lodge", 2, 3, 1, DateTime.Now, DateTime.Now); idCounter++;
     Reservation r2 = new(idCounter, "The Little Lodge", 4, 2, 2, DateTime.Now, DateTime.Now); idCounter++;
     Reservation r3 = new(idCounter, "Pond Cabin", 6, 1, 3, DateTime.Now, DateTime.Now); idCounter++;
 
@@ -29,4 +30,8 @@ public ReservationStorage()
     reservations.Add(r3.Id, r3);
 }
 
+    public static implicit operator ReservationStorage(Reservation v)
+    {
+        throw new NotImplementedException();
+    }
 }

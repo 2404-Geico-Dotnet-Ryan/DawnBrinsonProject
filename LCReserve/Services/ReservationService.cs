@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
 
 class ReservationService
@@ -19,20 +20,22 @@ class ReservationService
     {
         // this method will check if the reservation is available
         // it will return the reservation details
-        if (r.Available == true)
-        {
-            System.Console.WriteLine("The reservation is available.");
-            return r;
-        }
-        else
-        {
-            System.Console.WriteLine("The reservation is not available. Please try again.");
-            return null;
-        }
+            if (r.Available == true)
+            {
+                System.Console.WriteLine("The reservation is available.");
+                return r;
+            }
+            else
+            {
+                System.Console.WriteLine("The reservation is not available. Please try again.");
+                return null;
+            }
 
     }
 
-    public Reservation? MakeReservation(Reservation r)
+
+
+    public Reservation? ReserveLodge(Reservation r)
     {
         if (!r.Available)
         {
@@ -53,9 +56,10 @@ class ReservationService
         
         public List<Reservation> ViewReservations()
         {
+
             return rr.GetAllReservations();
-    
-     
+                   
+         
         }
 
         public Reservation? CancelReservation(Reservation r)
@@ -85,6 +89,6 @@ class ReservationService
             return rr.GetReservation(id);
         }
 
-
-    }
-
+///next we will get reservation by user
+///next we will get reservation by user
+}
