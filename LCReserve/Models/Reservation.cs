@@ -1,48 +1,46 @@
+using System.Numerics;
+
 class Reservation
 {
-public int Id { get; set; }
+    private static readonly int lastId = 0; //the Id property is auto-incremented by 1 each time a new reservation is created
+    public int Id { get; set; } //this is the primary key
     public string LodgeName { get; set; }
     public int NumberOfGuests { get; set; }
     public int NumberOfNights { get; set; }
-    public int ReservationID { get; set; }
+    public long CheckInDate { get; set; } //the format is MM/DD/YYYY
+    public long CheckOutDate { get; set; }
     public bool Available { get; set; }
-    public DateTime CheckInDate { get; set; }
-    public DateTime CheckOutDate { get; set; }
-    public string Date { get; internal set; }
-    public int? UserId { get; internal set; }
+    public int UserId { get; set; }
 
+    //constructors - I didn't add very many below because I wanted to keep it simple
     public Reservation()
     {
+        
         LodgeName = "";
         NumberOfGuests = 0;
         NumberOfNights = 0;
-        ReservationID = 0;
-        CheckInDate = DateTime.Now;
-        CheckOutDate = DateTime.Now;
+
     }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Reservation(int id, string lodgeName, int numberOfGuests, int numberOfNights, int reservationID, DateTime checkInDate, DateTime checkOutDate)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public Reservation(int id, string lodgeName, int numberOfGuests, int numberOfNights, long checkInDate, long checkOutDate, bool available, int userId)
     {
         Id = id;
         LodgeName = lodgeName;
         NumberOfGuests = numberOfGuests;
         NumberOfNights = numberOfNights;
-        ReservationID = reservationID;
         CheckInDate = checkInDate;
         CheckOutDate = checkOutDate;
+        Available = available;
+        UserId = userId;
     }
+
 
     public override string ToString()
     {
-        return "{id:" + Id
-        + ",lodgeName:'" + LodgeName
-        + "',numberOfGuests:" + NumberOfGuests
-        + ",numberOfNights:" + NumberOfNights
-        + ",reservationID:" + ReservationID
-        + ",checkInDate:" + CheckInDate
-        + ",checkOutDate:" + CheckOutDate + NumberOfNights +"}";
+
+
+        return "\nLodgeName: " + LodgeName + "\nNumber of Guests: " + NumberOfGuests + "\nNumber of Nights: " + NumberOfNights + "\nCheck In Date: " + CheckInDate + "\nCheck Out Date: " + CheckOutDate + "\nReservation ID: " + Id;
+
     }
 }
 

@@ -11,7 +11,7 @@ class ReservationStorage
     SO we are going to build some devices for Storing Reservations.
     BUT everything is sadly lost everytime the application shuts down.
     */
-
+/* 
 public Dictionary<int, Reservation> reservations = new Dictionary<int, Reservation>();
 
 public int idCounter = 1; 
@@ -34,4 +34,6 @@ public ReservationStorage()
     {
         throw new NotImplementedException();
     }
+} */
+
 }

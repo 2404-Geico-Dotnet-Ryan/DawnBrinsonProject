@@ -1,7 +1,12 @@
 
 class UserService
 {
-    UserRepo ur = new();
+    UserRepo ur;
+
+    public UserService(UserRepo ur)
+    {
+        this.ur = ur;
+    }
 
     //Register - this is not prompting the user for input, but rather taking in a User object.
 
@@ -18,9 +23,11 @@ class UserService
 
             return null;
         }
-        
 
+
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         List<User> allUsers = ur.GetAllUsers();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         foreach (User user in allUsers)
         {
@@ -46,16 +53,7 @@ class UserService
 public User? LoginUser(string username, string password)
 
 {
-    //This is where we would do some validation.
-    //For example, we could check if the email is already in use.
-    //We could also check if the password is strong enough
-    //We could also check if the username is already in use.
-    //We could also check if the email and password match.
 
-    //What I will actually be doing is:
-    //get all users
-    //check if the usernam and password match any user in my UserStorage
-    //if so they login -> return the user
 
     List<User> allUsers = ur.GetAllUsers();
 

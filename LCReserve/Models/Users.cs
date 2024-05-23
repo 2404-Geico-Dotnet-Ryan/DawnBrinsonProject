@@ -36,20 +36,6 @@ public override string ToString()
     + ",role:" + Role + "}";
 }
 
-//class methods go here
-//below we have a method that returns a string representation of the user object
-public string GetUsername()
-{
-    return Username;
-
-}
-
-//below we have a method that returns a string representation of the user object
-public string GetPassword()
-{
-    return Password;
-
-}
 
 
 } 

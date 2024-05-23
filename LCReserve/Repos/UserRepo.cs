@@ -1,79 +1,216 @@
+using Microsoft.Data.SqlClient;
+
 class UserRepo
 {
 
+    private readonly string _connectionString;
 
-    UserStorage userStorage = new();
-
-    //add, get-one, get-all, update, delete
-
-
-    public User AddUser(User u)
+    //Dependency Injection -> Constructor Injection
+    public UserRepo(string connString)
     {
+        _connectionString = connString;
+    }
+
+
+
+    //add, get-one, get-all, update, and delete
+    public User? AddUser(User u)
+    {
+        //Set up DB Connection
+        using SqlConnection connection = new(_connectionString);
+        connection.Open();
+
+        //Create the SQL String
+        string sql = "INSERT INTO dbo.[User] OUTPUT inserted.* VALUES (@Username, @Password, @Role)";
+
+        //Set up SqlCommand Object and use its methods to modify the Parameterized Values
+        using SqlCommand cmd = new(sql, connection);
+        cmd.Parameters.AddWithValue("@Username", u.Username);
+        cmd.Parameters.AddWithValue("@Password", u.Password);
+        cmd.Parameters.AddWithValue("@Role", u.Role);
         
-        u.Id = userStorage.idCounter++;  //incrementing the value afterwards, to prep it for the next time it's needed.
-        userStorage.users.Add(u.Id, u); //Add the user into our collection.
-        return u; //return the user
+
+        //Execute the Query
+        // cmd.ExecuteNonQuery(); //This executes a non-select SQL statement (inserts, updates, deletes)
+        using SqlDataReader reader = cmd.ExecuteReader();
+
+        //Extract the Results
+        if (reader.Read())
+        {
+            //If Read() found data -> then extract it.
+            User newUser = BuildUser(reader); //Helper Method for doing that repetitive task
+            return newUser;
+        }
+        else
+        {
+            //Else Read() found nothing -> Insert Failed. :(
+            return null;
+        }
     }
 
     public User? GetUser(int id)
     {
-        // Alternative approach that breaks each step down.
-        if (userStorage.users.ContainsKey(id)) //if the user exists
+        try
         {
-            User selectedUser = userStorage.users[id]; //select the user
-            return selectedUser; //return the user
-            //return UserStorage.Users[id];
+            //Set up DB Connection
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
+
+            //Create the SQL String
+            string sql = "SELECT * FROM dbo.[User] WHERE Id = @Id";
+
+            //Set up SqlCommand Object
+            using SqlCommand cmd = new(sql, connection);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            //Execute the Query
+            using var reader = cmd.ExecuteReader();
+
+            //Extract the Results
+            if (reader.Read())
+            {
+                //for each iteration -> extract the results to a User object -> add to list.
+                User newUser = BuildUser(reader);
+                return newUser;
+            }
+
+            return null; //Didnt find anyone :(
+
         }
-        else
+        catch (Exception e)
         {
-            System.Console.WriteLine("Invalid User ID - Please Try Again");
+            System.Console.WriteLine(e.Message);
+            System.Console.WriteLine(e.StackTrace);
             return null;
         }
     }
 
-    //THIS IS A NEW METHOD!
-    //No Parameters because...get everything is get everything. No options to choose.
-    public List<User> GetAllUsers()
+    public List<User>? GetAllUsers()
     {
-        //I am choosing to return a List because that is a much more common collection to
-        //work with. It does mean I have to do a little bit of work here - but its not bad.
-        return userStorage.users.Values.ToList();
-    }
+        List<User> users = [];
 
+        try
+        {
+            //Set up DB Connection
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
+
+            //Create the SQL String
+            string sql = "SELECT * FROM dbo.[User]";
+
+            //Set up SqlCommand Object
+            using SqlCommand cmd = new(sql, connection);
+
+            //Execute the Query
+            using var reader = cmd.ExecuteReader(); //flexing options here with the use of var.
+
+            //Extract the Results
+            while (reader.Read())
+            {
+                //for each iteration -> extract the results to a User object -> add to list.
+                User newUser = BuildUser(reader);
+
+                //don't return! Instead Add to List!
+                users.Add(newUser);
+            }
+
+            return users;
+        }
+        catch (Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            System.Console.WriteLine(e.StackTrace);
+            return null;
+        }
+    }
 
     public User? UpdateUser(User updatedUser)
     {
-        //Assuming that the ID is consistent with an ID that exists
-        //then we just have to update the value (aka User) for said key (ID) within the Dictionary.
         try
         {
-            userStorage.users[updatedUser.Id] = updatedUser;
-            //I choose to send the updated User back as a "response-feedback" system.
-            //"Here is me telling you that I have updated the storage with this User I send back to you"
-            return updatedUser;
+            //Set up DB Connection
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
+
+            //Create the SQL String
+            string sql = "UPDATE dbo.[User] SET Username = @Username, Password = @Password, Role = @Role OUTPUT inserted.* WHERE Id = @Id";
+
+            //Set up SqlCommand Object
+            using SqlCommand cmd = new(sql, connection);
+            cmd.Parameters.AddWithValue("@Id", updatedUser.Id);
+            cmd.Parameters.AddWithValue("@Username", updatedUser.Username);
+            cmd.Parameters.AddWithValue("@Password", updatedUser.Password);
+            cmd.Parameters.AddWithValue("@Role", updatedUser.Role);
+
+            //Execute the Query
+            using var reader = cmd.ExecuteReader();
+
+            //Extract the Results
+            if (reader.Read())
+            {
+                //for each iteration -> extract the results to a User object -> add to list.
+                User newUser = BuildUser(reader);
+                return newUser;
+            }
+
+            return null; //Didnt find anyone :(
+
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            System.Console.WriteLine("Invalid User ID - Please Try Again");
+            System.Console.WriteLine(e.Message);
+            System.Console.WriteLine(e.StackTrace);
             return null;
         }
     }
 
-    public User? DeleteUser(User m)
+    public User? DeleteUser(User u)
     {
-        //If we have the ID -> then simply Remove it from storage
-        bool didRemove = userStorage.users.Remove(m.Id);
+        try
+        {
+            //Set up DB Connection
+            using SqlConnection connection = new(_connectionString);
+            connection.Open();
 
-        if (didRemove)
-        {
-            //now we will return the User that got deleted.
-            return m;
+            //Create the SQL String
+            string sql = "DELETE FROM dbo.[User] OUTPUT deleted.* WHERE Id = @Id";
+
+            //Set up SqlCommand Object
+            using SqlCommand cmd = new(sql, connection);
+            cmd.Parameters.AddWithValue("@Id", u.Id);
+
+            //Execute the Query
+            using var reader = cmd.ExecuteReader();
+
+            //Extract the Results
+            if (reader.Read())
+            {
+                //for each iteration -> extract the results to a User object -> add to list.
+                User newUser = BuildUser(reader);
+                return newUser;
+            }
+
+            return null; //Didnt find anyone :(
+
         }
-        else
+        catch (Exception e)
         {
-            System.Console.WriteLine("Invalid User ID - Please Try Again");
+            System.Console.WriteLine(e.Message);
+            System.Console.WriteLine(e.StackTrace);
             return null;
         }
     }
 
+
+    //Helper Method
+    private static User BuildUser(SqlDataReader reader)
+    {
+        User newUser = new();
+        newUser.Id = (int)reader["Id"];
+        newUser.Username = (string)reader["Username"];
+        newUser.Password = (string)reader["Password"];
+        newUser.Role = (string)reader["Role"];
+
+        return newUser;
+    }
 }

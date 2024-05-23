@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Data.Common;
 using System.Runtime.ExceptionServices;
 
 namespace LCReserve;
@@ -17,38 +18,51 @@ class Program
 
      */
 
-    static ReservationService rs = new();
-    static UserService us = new();
-    static UserStorage? currentUser = null;
-    static ReservationStorage? currentReservation = null;
+    static ReservationService? rs;
+    static UserService? us;
+    static User? currentUser = null; //set to 
 
 
-    private static object r;
 
     static void Main(string[] args)
     {
+
+        string path = @"C:\Users\A141409\LCReserve-db.txt"; // this is the path to the file where the data will be stored - using the @ sign reads the string as is
+        string connectionString = File.ReadAllText(path); //tested and this is good to go - reads the file and stores the data in the variable connectionString
+
+        UserRepo ur = new(connectionString); // this line of code creates a new instance of the UserRepo class and passes the connectionString variable as an argument
+        us = new(ur); // this line of code creates a new instance of the UserService class and passes the ur variable as an argument
+
+        ReservationRepo rr = new(connectionString); //done
+        rs = new(rr); //done
+
+        System.Console.WriteLine();
+        System.Console.WriteLine("====================================================");
+        System.Console.WriteLine("Welcome to the Little Creek Preserve Reservations!");
+        System.Console.WriteLine("====================================================");
+        System.Console.WriteLine();
+
         LoginMenu(); // this line of code calls the LoginMenu method
-        UserMenu(); // this line of code calls the UserMenu method that list the options for the user after they have signed in or registered 
+
+        UserMenu(); // this line of code calls the UserMenu method that list the options for the user after they have signed in or registered
 
     }
-
-
     private static void LoginMenu()
     {
-        System.Console.WriteLine("Welcome to the Little Creek Preserve Reservations!");
+
         bool keepGoing = true;
         while (keepGoing)
         {
             System.Console.WriteLine("Please select an option:");
             System.Console.WriteLine("===============================");
-            System.Console.WriteLine("1. Register");
-            System.Console.WriteLine("2. Login");
-            System.Console.WriteLine("3. Exit");
+            System.Console.WriteLine("[1] Register"); //tested worked & logged to db 
+            System.Console.WriteLine("[2] Login"); //tested - worked
+            System.Console.WriteLine("[3] Exit"); //tested - worked
             System.Console.WriteLine("===============================");
 
             int input = int.Parse(Console.ReadLine() ?? "0");
             //Same Validation method copied over
-            input = ValidateCmd(input, 4);
+            input = ValidateCmd(input, 3);
 
             //Extracted to method - uses switch case to determine what to do next.
             keepGoing = LoginMenuDecideNextOption(input);
@@ -73,7 +87,7 @@ class Program
 
             case 3:
                 {
-                    System.Console.WriteLine("Goodbye!");
+                    Exit();
                     break;
                 }
             case 0:
@@ -88,17 +102,16 @@ class Program
 
     private static void Register() //If the user doens't have an existing account to login they can register for a new account
     {
-        System.Console.WriteLine("Please enter a username:");
+        System.Console.WriteLine("Please create a username (pick something cool or I will judge you):");
         string username = System.Console.ReadLine() ?? "";
-        System.Console.WriteLine("Please enter your password:");
+        System.Console.WriteLine("Please enter a password:");
         string password = System.Console.ReadLine() ?? "";
-        User u = new() { Username = username, Password = password, Role = "user" };
-        User? registeredUser = us.RegisterUser(u);
-        if (registeredUser != null)
+        User? newUser = new(0, username, password, "user");
+        newUser = us.RegisterUser(newUser); //should return the new user
+        if (newUser != null)
         {
             System.Console.WriteLine("You have successfully registered!");
-            //currentUser = registeredUser;
-            UserMenu();
+            //UserMenu();
         }
         else
         {
@@ -109,45 +122,53 @@ class Program
 
     private static void Login()
     {
-        System.Console.WriteLine("Please enter your username:");
-        string username = System.Console.ReadLine() ?? "";
-        System.Console.WriteLine("Please enter your password:");
-        string password = System.Console.ReadLine() ?? "";
-        User? loggedInUser = us.LoginUser(username, password); //
-        if (loggedInUser != null)
+        while (currentUser == null) //this will keep the program running until the user logs in (or exits
         {
-            System.Console.WriteLine("You have successfully logged in!");
+            System.Console.WriteLine("Please enter your username:");
+            string username = System.Console.ReadLine() ?? "";
+            System.Console.WriteLine("Please enter your password:");
+            string password = System.Console.ReadLine() ?? "";
+            currentUser = us.LoginUser(username, password);
 
-            UserMenu();
-        }
-        else
-        {
-            System.Console.WriteLine("===============================");
-            System.Console.WriteLine("Login failed. Please try again.");
-            System.Console.WriteLine("===============================");
+            if (currentUser != null)
+            {
+                System.Console.WriteLine("You have successfully logged in!");
+
+
+                UserMenu();
+            }
+            else
+            {
+                System.Console.WriteLine("===============================");
+                System.Console.WriteLine("Login failed. Please try again.");
+                System.Console.WriteLine("===============================");
+            }
+
+
         }
     }
-
-
 
     private static void UserMenu() // this method will list the options for the user after they have signed in or registered
     {
         bool keepGoing = true; // this will keep the program running until the user decides to exit
         while (keepGoing)
         {
+
+            System.Console.WriteLine("==========================");
             System.Console.WriteLine("Please select an option:");
-            System.Console.WriteLine("1. Reserve Lodge ");
-            System.Console.WriteLine("2. View Reservations");
-            System.Console.WriteLine("3. Cancel Reservation");
-            System.Console.WriteLine("4. Exit");
+            System.Console.WriteLine("==========================");
+            System.Console.WriteLine("[1] Reserve Lodge ");
+            System.Console.WriteLine("[2] View Reservations");
+            System.Console.WriteLine("[3] Cancel Reservation");
+            System.Console.WriteLine("[4] Exit");
 
             int input = int.Parse(System.Console.ReadLine() ?? "0"); // this will take the user's input and convert it to an integer
-            input = ValidateCmd(input, 5);
+            input = ValidateCmd(input, 4);
             keepGoing = UserMenuNextOption(input);
         }
     }
 
-    //next we will use a swith statement to determine the next option 
+    //next we will use a swith statement to determine the next option
 
     private static bool UserMenuNextOption(int input) // this method will determine the next option
     {
@@ -185,78 +206,74 @@ class Program
 
 
 
-    private static void ReserveLodge()
+    private static void ReserveLodge() //Works! Kinda buggy but works - need to fix the date format
     {
 
-        //this method will allow the user to reserve a lodge
-        //use service method now
-        //first we will ask the user to enter the name of the lodge they want to reserve
+        //here we will make a new reservation
         System.Console.WriteLine("Please enter the name of the lodge you would like to reserve:");
         string lodgeName = System.Console.ReadLine() ?? "";
-        //next we will ask the user to enter the number of guests that will be staying in the lodge
-        System.Console.WriteLine("Please enter the number of guests that will be staying in the lodge:");
+        System.Console.WriteLine("Please enter the number of guests:");
         int numberOfGuests = int.Parse(System.Console.ReadLine() ?? "0");
-        //next we will ask the user to enter the Date they will be checking in
-        System.Console.WriteLine("Please enter the Date you will be checking in (YYYY-MM-DD): ");
-        DateTime checkInDate = DateTime.Parse(System.Console.ReadLine());
-        //next we will ask the user to enter the number of nights they will be staying in the lodge
-        System.Console.WriteLine("Please enter the number of nights you will be staying in the lodge:");
+        System.Console.WriteLine("Please enter the number of nights you would like to stay:");
         int numberOfNights = int.Parse(System.Console.ReadLine() ?? "0");
-        //then we will Check if the reservation is available
-        Reservation r = new() { LodgeName = lodgeName, NumberOfGuests = numberOfGuests, CheckInDate = checkInDate, NumberOfNights = numberOfNights, Available = true };
-        Reservation? reservedLodge = rs.ReserveLodge(r);
+        System.Console.WriteLine("Please enter the check-in date (MMDDYYYY):");
+        long checkInDate = long.Parse(System.Console.ReadLine() ?? "");
+        //we will calculate the checkout date by adding the number of nights to the check in date - when I changed my DateTime to long I wasn't getting the cool calculations
+        long checkOutDate = checkInDate + numberOfNights;
 
-        if (reservedLodge != null)
+        Reservation? newReservation = new(0, lodgeName, numberOfGuests, numberOfNights, checkInDate, checkOutDate, true, currentUser.Id);
+        newReservation = rs.ReserveLodge(newReservation);
+        if (newReservation != null)
         {
-            System.Console.WriteLine("You have successfully reserved a lodge!");
-            //we will return the reservation details here 
-            System.Console.WriteLine("Here are your reservation details: " + reservedLodge);
+            System.Console.WriteLine("Your reservation was successful! Here are the details: " + newReservation);
         }
         else
         {
             System.Console.WriteLine("Reservation failed. Please try again.");
         }
 
-
     }
 
-
-    private static void ViewReservations()
+    private static void ViewReservations() //Works - tested!
     {
-        //now we will let the user view a reservation they made using their username
-        System.Console.WriteLine("Please enter your username to view your reservation:");
-        string username = System.Console.ReadLine() ?? "";
-        User? user = us.GetUser(username);
-        if (user != null)
+        //now we are going to use services to view the reservations using the current user
+
+        List<Reservation> reservations = rs.ViewReservations(currentUser);
+        if (reservations.Count == 0)
         {
-            System.Console.WriteLine("Here are your reservations:");
-            List<Reservation> reservations = rs.ViewReservations();
+            System.Console.WriteLine("You have no reservations.");
+        }
+        else
+
+        {
+            System.Console.WriteLine("Here are your reservations: ");
             foreach (var r in reservations)
             {
+
                 System.Console.WriteLine(r);
             }
         }
-        else
-        {
-            System.Console.WriteLine("Reservation not found. Please try again.");
-        }
+        /*  foreach (var r in reservations)
+         {
+             System.Console.WriteLine(r);
+         }
 
-
+  */
     }
 
-    private static void CancelReservation()
+
+    private static void CancelReservation() //this works and returne
     {
-        //this method will allow the user to cancel their reservation
-        //we will cancel the reservation using the reservation ID
+        //this method will find the user's reservation by the reservation ID and cancel it
         System.Console.WriteLine("Please enter the reservation ID you would like to cancel:");
         int reservationID = int.Parse(System.Console.ReadLine() ?? "0");
-        Reservation? r = rs.GetReservation(reservationID);
+        Reservation? r = rs.GetReservation(reservationID); //this is retrieving the reservation by the reservation ID
         if (r != null)
         {
             Reservation? cancelledReservation = rs.CancelReservation(r);
             if (cancelledReservation != null)
             {
-                System.Console.WriteLine("Your " + cancelledReservation + " has successfully cancelled your reservation.");
+                System.Console.WriteLine("The following reservation:  " + cancelledReservation + " has successfully been cancelled.");
             }
             else
             {
@@ -269,14 +286,17 @@ class Program
         }
 
 
+
     }
 
-    private static void Exit()
+    private static void Exit() //this works BUT it is bringing the main menu up after the user exits - fix if have time
     {
         //this will allow the user to exit the program
         System.Console.WriteLine("Thanks for visiting Little Creek Reserve! Goodbye!");
+        LoginMenu(); //after exit just taking them back to the login menu
     }
 
+    //some cool validation method below - copied it 
     private static int ValidateCmd(int cmd, int maxOption)
     {
         while (cmd < 0 || cmd > maxOption)

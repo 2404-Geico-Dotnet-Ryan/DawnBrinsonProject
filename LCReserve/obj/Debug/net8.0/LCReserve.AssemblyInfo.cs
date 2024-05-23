@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LCReserve")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46cc3c8f6926099efc6ed43dd0ea9ca6f5ed6be1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd5dd522cc3a37b09ade6da9c050c8cd2c0af050")]
 [assembly: System.Reflection.AssemblyProductAttribute("LCReserve")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LCReserve")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
