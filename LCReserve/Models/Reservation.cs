@@ -2,7 +2,7 @@ using System.Numerics;
 
 class Reservation
 {
-    private static readonly int lastId = 0; //the Id property is auto-incremented by 1 each time a new reservation is created
+   // private static readonly int lastId = 0; //the Id property is auto-incremented by 1 each time a new reservation is created
     public int Id { get; set; } //this is the primary key
     public string LodgeName { get; set; }
     public int NumberOfGuests { get; set; }

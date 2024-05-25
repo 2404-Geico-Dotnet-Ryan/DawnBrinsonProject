@@ -27,6 +27,8 @@ class Program
     static void Main(string[] args)
     {
 
+        Console.Clear();
+        Thread.Sleep(1000);
         string path = @"C:\Users\A141409\LCReserve-db.txt"; // this is the path to the file where the data will be stored - using the @ sign reads the string as is
         string connectionString = File.ReadAllText(path); //tested and this is good to go - reads the file and stores the data in the variable connectionString
 
@@ -36,12 +38,46 @@ class Program
         ReservationRepo rr = new(connectionString); //done
         rs = new(rr); //done
 
-        System.Console.WriteLine();
-        System.Console.WriteLine("====================================================");
-        System.Console.WriteLine("Welcome to the Little Creek Preserve Reservations!");
-        System.Console.WriteLine("====================================================");
-        System.Console.WriteLine();
+        
 
+        string deerart = @"
+     /)/)/) /).-')
+    ////((.'_.--'   .(\(\(\                   n/(/.')_         .
+   ((((_/ .'      .-`)))))))                  `-._ ('.'        \`(\
+  (_._ ` (         `.   (/ |                      \ (           `-.\
+      `-. \          `-.  /                        `.`.           \ \
+         `.`.          | /                /)         \ \           | L
+           `.`._.      ||_               (()          `.\          ) F
+   (`._      `. <    .'.-'                \`-._____    ||        .' /
+    `(\`._.._(\(\)_.'.'-------------.___   `-.(`._ `-./ /     _.' .'
+      (.-.| \_`.__.-<     `.    . .-'   `-.   _> `-._((`.__.-'_.-'
+          (.--'   ' |    \ \     /| \.-./ |\ `-.   _.'>.___,-'`.
+             (  o  <      |     |  `o   o'  |  /(`'.-'   --.    \
+           .'     /      .'   _ |   |   |   |  ( .'/  o .-'   \  |
+           (__.-.`-._  -'    '   \  \   /  /    ' /    _/      | J
+                 \_  `.      _.__.L |   | J      (  .'\`.    _/-./
+                   `-<  .-L|'`-|  ||\\V/ ||       `'   L \  /   /
+                      |J  ||    \ ||||  |||            |  |_|  )
+                      ||  ||     )||||  |||            || / ||J
+                      (|  (|    / |||)  (||            |||  |||
+                      ||  ||   / /||||  |||            |(|  |||
+                      ||  ||  / / ||||  |||            |||  |||
+_______.------.______/ |_/ |_/_|_/// |__| \\__________// |--( \\---------
+                    '-' '-'       '-'    `-`           '-'   `-`
+
+        "; 
+
+
+
+
+        System.Console.WriteLine(deerart);
+        System.Console.WriteLine();
+        System.Console.WriteLine("====================================================");
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
+        System.Console.WriteLine("Welcome to Little Creek Preserve Reservations!");
+        Console.ResetColor();
+        System.Console.WriteLine("====================================================");
+        System.Console.WriteLine();
         LoginMenu(); // this line of code calls the LoginMenu method
 
         UserMenu(); // this line of code calls the UserMenu method that list the options for the user after they have signed in or registered
@@ -55,9 +91,11 @@ class Program
         {
             System.Console.WriteLine("Please select an option:");
             System.Console.WriteLine("===============================");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             System.Console.WriteLine("[1] Register"); //tested worked & logged to db 
             System.Console.WriteLine("[2] Login"); //tested - worked
             System.Console.WriteLine("[3] Exit"); //tested - worked
+            Console.ResetColor();
             System.Console.WriteLine("===============================");
 
             int input = int.Parse(Console.ReadLine() ?? "0");

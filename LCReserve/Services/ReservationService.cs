@@ -78,7 +78,7 @@ class ReservationService
         return filteredReservations; //return the list of filtered reservations */
     }
 
-//cancel a reservation
+    //cancel a reservation
 
 
 
@@ -94,7 +94,6 @@ class ReservationService
         {
             r.Available = true;
             rr.CancelReservation(r);
-            System.Console.WriteLine("The reservation has been cancelled.");
             return r;
         }
     }
